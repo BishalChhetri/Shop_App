@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../models/product.dart';
-import '../widgets/product_items.dart';
+import './product.dart';
 
-class ProductOverviewScreen extends StatelessWidget {
-  final List<Product> loadedProduct = [
+class Products with ChangeNotifier {
+  List<Product> _items = [
     Product(
       id: 'p1',
       title: 'Red Shirt',
@@ -39,24 +38,33 @@ class ProductOverviewScreen extends StatelessWidget {
     ),
   ];
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MyShop'),
-      ),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(10.0),
-        itemCount: loadedProduct.length,
-        itemBuilder: (ctx, i) => ProductItems(loadedProduct[i].id,
-            loadedProduct[i].title, loadedProduct[i].imageUrl),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 3 / 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-        ),
-      ),
-    );
+  // var _showFavorites = false;
+
+  List<Product> get items {
+    // if (_showFavorites) {
+    //   return _items.where((productId) => productId.isFavorite).toList();
+    // }
+    return [..._items];
+  }
+
+  List<Product> get favitems {
+    return _items.where((productId) => productId.isFavorite).toList();
+  }
+  // void showFavorites() {
+  //   _showFavorites = true;
+  //   notifyListeners();
+  // }
+
+  // void showAll() {
+  //   _showFavorites = false;
+  //   notifyListeners();
+  // }
+
+  void addProduct() {
+    notifyListeners();
+  }
+
+  Product findByID(String id) {
+    return items.firstWhere((prod) => prod.id == id);
   }
 }
